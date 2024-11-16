@@ -3,6 +3,7 @@ pipeline {
     environment {
         VIRTUAL_ENV = 'venv'
         PYTHONPATH = "${env.WORKSPACE}"
+        DEPLOYDIR = 'C:\\Users\\hassa\\OneDrive\\Desktop\\test'
     }
     stages {
         stage('Setup') {
@@ -29,10 +30,33 @@ pipeline {
                 }
             }
         }
-        stage('Deploy') {
+        stage('Coverage') {
             steps {
                 script {
-                    echo "Deploying application..."
+                    bat "${VIRTUAL_ENV}\\Scripts\\activate && pip install coverage"
+                    bat "${VIRTUAL_ENV}\\Scripts\\activate && coverage run -m unittest discover"
+                    bat "${VIRTUAL_ENV}\\Scripts\\activate && coverage report -m"
+                }
+            }
+        }
+        stage('Security Scan') {
+            steps {
+                script {
+                    bat "${VIRTUAL_ENV}\\Scripts\\activate && pip install bandit"
+                    bat "${VIRTUAL_ENV}\\Scripts\\activate && bandit -r ."
+                }
+            }
+        }
+        stage('Deployment') {
+            steps {
+                script {
+                    echo "Deploying application to local server..."
+                    bat "mkdir ${DEPLOYDIR} || echo Directory already exists"
+                    bat "xcopy /E /I /Y ${env.WORKSPACE}\\* ${DEPLOYDIR}"
+                    bat "python -m venv ${DEPLOYDIR}\\venv"
+                    bat "${DEPLOYDIR}\\venv\\Scripts\\activate && pip install -r ${DEPLOYDIR}\\requirements.txt"
+                    bat "${DEPLOYDIR}\\venv\\Scripts\\activate && python ${DEPLOYDIR}\\app.py"
+                    echo "Application deployed and executed locally."
                 }
             }
         }
