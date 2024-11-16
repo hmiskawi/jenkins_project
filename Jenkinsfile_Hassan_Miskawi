@@ -53,7 +53,7 @@ pipeline {
                     echo "Deploying application to local server..."
                     bat "if not exist \"${DEPLOYDIR}\" mkdir \"${DEPLOYDIR}\""
                     bat "copy app.py \"${DEPLOYDIR}\""
-                    echo "Application deployed and executed locally."
+                    echo "Application deployed locally."
                 }
             }
         }
