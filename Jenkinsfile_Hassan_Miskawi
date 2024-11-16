@@ -51,11 +51,8 @@ pipeline {
             steps {
                 script {
                     echo "Deploying application to local server..."
-                    bat "mkdir ${DEPLOYDIR} || echo Directory already exists"
-                    bat "xcopy /E /I /Y ${env.WORKSPACE}\\* ${DEPLOYDIR}"
-                    bat "python -m venv ${DEPLOYDIR}\\venv"
-                    bat "${DEPLOYDIR}\\venv\\Scripts\\activate && pip install -r ${DEPLOYDIR}\\requirements.txt"
-                    bat "${DEPLOYDIR}\\venv\\Scripts\\activate && python ${DEPLOYDIR}\\app.py"
+                    bat "if not exist \"${DEPLOYDIR}\" mkdir \"${DEPLOYDIR}\""
+                    bat "copy app.py \"${DEPLOYDIR}\""
                     echo "Application deployed and executed locally."
                 }
             }
