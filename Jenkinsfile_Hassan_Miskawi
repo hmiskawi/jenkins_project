@@ -34,7 +34,7 @@ pipeline {
             steps {
                 script {
                     bat "${VIRTUAL_ENV}\\Scripts\\activate && pip install coverage"
-                    bat "${VIRTUAL_ENV}\\Scripts\\activate && coverage run -m unittest discover"
+                    bat "${VIRTUAL_ENV}\\Scripts\\activate && coverage run -m pytest"
                     bat "${VIRTUAL_ENV}\\Scripts\\activate && coverage report -m"
                 }
             }
