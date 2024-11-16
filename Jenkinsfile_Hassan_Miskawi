@@ -43,7 +43,8 @@ pipeline {
             steps {
                 script {
                     bat "${VIRTUAL_ENV}\\Scripts\\activate && pip install bandit"
-                    bat "${VIRTUAL_ENV}\\Scripts\\activate && bandit -r ."
+                    bat "${VIRTUAL_ENV}\\Scripts\\activate && bandit -r . -f txt -o bandit_report.txt"
+                    bat "type bandit_report.txt"
                 }
             }
         }
